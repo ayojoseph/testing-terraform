@@ -24,7 +24,7 @@ module "blog_vpc" {
   name = "dev"
   cidr = "10.0.0.0/16"
 
-  azs             = ["ca-central-1a", "ca-central-1b", "ca-central-1c"]
+  azs             = ["ca-central-1a", "ca-central-1b", "ca-central-1d"]
   public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
 
   tags = {
