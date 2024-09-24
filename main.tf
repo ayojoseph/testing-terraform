@@ -35,7 +35,7 @@ module "blog_sg" {
   name = "blog_new"
   description = "Setting up new security group using module"
 
-  vpc_id = data.aws_vpc.default
+  vpc_id = data.aws_vpc.default.id
 
   ingress_rules = ["http-80-tcp","https-443-tcp"]
   ingress_cidr_blocks = ["0.0.0.0/0"]
