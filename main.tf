@@ -56,7 +56,7 @@ module "blog_autoscaling" {
   
 
   # Autoscaling group
-  name = "blog"
+  name = "${var.environment.name}-blog"
   min_size = var.asg_min_size
   max_size = var.asg_max_size
 
@@ -73,7 +73,7 @@ module "blog_alb" {
   source = "terraform-aws-modules/alb/aws"
   version = "~> 6.0"
 
-  name    = "blog-alb"
+  name    = "${var.environment.name}-blog-alb"
 
   load_balancer_type = "application"
 
@@ -86,7 +86,7 @@ module "blog_alb" {
 
   target_groups = [
     {
-      name_prefix      = "blog-"
+      name_prefix      = "${var.environment.name}-"
       backend_protocol = "HTTP"
       backend_port     = 80
       target_type      = "instance"
@@ -110,7 +110,7 @@ module "blog_alb" {
 module "blog_sg" {
   source      = "terraform-aws-modules/security-group/aws"
   version     = "4.13.0"
-  name        = "blog"
+  name        = "${var.environment.name}-blog"
   description = "Setting up new security group using module"
 
   vpc_id = module.blog_vpc.vpc_id
