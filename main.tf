@@ -50,7 +50,7 @@ module "blog_vpc" {
 
 #AUTOSCALING
 
-module "asg" {
+module "blog_autoscaling" {
   source  = "terraform-aws-modules/autoscaling/aws"
   version = "6.5.2"
   
@@ -68,29 +68,15 @@ module "asg" {
   instance_type = var.instance_type
 }
 
-# SECURITY GROUPS
-module "blog_sg" {
-  source      = "terraform-aws-modules/security-group/aws"
-  version     = "5.2.0"
-  name        = "blog"
-  description = "Setting up new security group using module"
-
-  vpc_id = module.blog_vpc.vpc_id
-
-  ingress_rules       = ["http-80-tcp","https-443-tcp"]
-  ingress_cidr_blocks = ["0.0.0.0/0"]
-
-  egress_rules       = ["all-all"]
-  egress_cidr_blocks = ["0.0.0.0/0"]
-
-}
-
 #LOAD BALANCER
 module "blog_alb" {
   source = "terraform-aws-modules/alb/aws"
   version = "~> 6.0"
 
   name    = "blog-alb"
+
+  load_balancer_type = "application"
+  
   vpc_id  = module.blog_vpc.vpc_id
   subnets = module.blog_vpc.public_subnets
 
@@ -118,6 +104,22 @@ module "blog_alb" {
   tags = {
     Environment = "dev"
   }
+}
+
+# SECURITY GROUPS
+module "blog_sg" {
+  source      = "terraform-aws-modules/security-group/aws"
+  version     = "4.13.0"
+  name        = "blog"
+  description = "Setting up new security group using module"
+
+  vpc_id = module.blog_vpc.vpc_id
+
+  ingress_rules       = ["http-80-tcp","https-443-tcp"]
+  ingress_cidr_blocks = ["0.0.0.0/0"]
+
+  egress_rules       = ["all-all"]
+  egress_cidr_blocks = ["0.0.0.0/0"]
 }
 
 
